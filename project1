@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Store Project</title>
+<style>
+    body { margin: 0; font-family: Arial; background: #f4f4f4; }
+
+    /* Top Navigation */
+    .navbar {
+        background: #222;
+        padding: 10px;
+        color: white;
+        text-align: center;
+    }
+    .navbar button {
+        margin: 5px;
+        padding: 10px;
+        background: #444;
+        border: none;
+        color: white;
+        cursor: pointer;
+    }
+    .navbar button:hover {
+        background: #666;
+    }
+
+    /* Pages */
+    .page {
+        display: none;
+        padding: 20px;
+    }
+    .active {
+        display: block;
+    }
+
+    /* Login / Registration */
+    .card {
+        width: 350px;
+        margin: 30px auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 0 5px #ccc;
+        border-radius: 10px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #27ae60;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Catalogue */
+    .product {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 0 4px #aaa;
+    }
+</style>
+</head>
+<body>
+
+<!-- TOP NAVIGATION -->
+<div class="navbar">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('login')">Login</button>
+    <button onclick="showPage('register')">Register</button>
+    <button onclick="showPage('catalogue')">Catalogue</button>
+    <button onclick="showPage('cart')">Cart</button>
+</div>
+
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+    <h1>Welcome to the Online Store</h1>
+    <p>Use the navigation bar to explore the site.</p>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login" class="page">
+    <div class="card">
+        <h2>Login</h2>
+        <input type="text" id="loginUser" placeholder="Username">
+        <input type="password" id="loginPass" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="loginMsg"></p>
+    </div>
+</div>
+
+<!-- REGISTRATION PAGE -->
+<div id="register" class="page">
+    <div class="card">
+        <h2>Register</h2>
+        <input type="text" id="regUser" placeholder="Username">
+        <input type="password" id="regPass" placeholder="Password">
+        <button onclick="register()">Register</button>
+        <p id="regMsg"></p>
+    </div>
+</div>
+
+<!-- CATALOGUE PAGE -->
+<div id="catalogue" class="page">
+    <h2>Product Catalogue</h2>
+
+    <div class="product">
+        <h3>Watch</h3>
+        <p>Price: $50</p>
+        <button onclick="addToCart('Watch', 50)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <h3>Headphones</h3>
+        <p>Price: $80</p>
+        <button onclick="addToCart('Headphones', 80)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <h3>Bag</h3>
+        <p>Price: $30</p>
+        <button onclick="addToCart('Bag', 30)">Add to Cart</button>
+    </div>
+</div>
+
+<!-- CART PAGE -->
+<div id="cart" class="page">
+    <h2>Your Cart</h2>
+    <ul id="cartList"></ul>
+    <h3>Total: $<span id="totalPrice">0</span></h3>
+</div>
+
+<script>
+/* PAGE SWITCHING */
+function showPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+}
+
+/* SIMPLE LOGIN & REGISTRATION */
+const users = [];
+
+function register() {
+    let user = document.getElementById('regUser').value;
+    let pass = document.getElementById('regPass').value;
+
+    if (user === "" || pass === "") {
+        document.getElementById("regMsg").innerHTML = "All fields required!";
+        return;
+    }
+
+    users.push({ user, pass });
+    document.getElementById("regMsg").innerHTML = "Registration Successful!";
+}
+
+function login() {
+    let user = document.getElementById('loginUser').value;
+    let pass = document.getElementById('loginPass').value;
+
+    const found = users.find(u => u.user === user && u.pass === pass);
+
+    if (found) {
+        document.getElementById("loginMsg").innerHTML = "Login Successful!";
+    } else {
+        document.getElementById("loginMsg").innerHTML = "Invalid Credentials!";
+    }
+}
+
+/* CART SYSTEM */
+let cart = [];
+
+function addToCart(name, price) {
+    cart.push({ name, price });
+    alert(name + " added to cart!");
+    updateCart();
+}
+
+function updateCart() {
+    const cartList = document.getElementById("cartList");
+    cartList.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = item.name + " - $" + item.price;
+        cartList.appendChild(li);
+        total += item.price;
+    });
+
+    document.getElementById("totalPrice").innerText = total;
+}
+</script>
+
+</body>
+</html>
